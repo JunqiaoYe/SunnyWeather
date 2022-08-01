@@ -28,15 +28,23 @@ public class Repository {
     }
 
     public LiveData<List<Place>> searchPlaces(String query) {
+        Log.i("sss", "searchplaces");
         MutableLiveData<List<Place>> liveData = new MutableLiveData<>();
         new Thread(() -> {
-            PlaceResponse placeResponse = SunnyWeatherNetwork.getInstance().searchPlaces(query);
-            Log.i("sss", placeResponse == null ? "is null" : "not null");
-            if (placeResponse.getStatus().equals("ok")) {
-                List<Place> places = placeResponse.getPlaces();
-                liveData.postValue(places);
-            } else {
-                throw new RuntimeException("response status is " + placeResponse.getStatus());
+            try {
+                PlaceResponse placeResponse = SunnyWeatherNetwork.getInstance().searchPlaces(query);
+                Log.i("sss", placeResponse == null ? "is null" : "not null");
+                if (placeResponse == null) {
+                    throw new Exception("placeResponse is null!!");
+                }
+                if (placeResponse.getStatus().equals("ok")) {
+                    List<Place> places = placeResponse.getPlaces();
+                    liveData.postValue(places);
+                } else {
+                    throw new RuntimeException("response status is " + placeResponse.getStatus());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }).start();
         return liveData;

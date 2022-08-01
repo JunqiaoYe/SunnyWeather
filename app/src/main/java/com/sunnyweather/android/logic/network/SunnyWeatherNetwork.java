@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 
 import com.sunnyweather.android.logic.model.PlaceResponse;
 
+import java.io.IOException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,23 +30,24 @@ public class SunnyWeatherNetwork {
         return instance;
     }
 
-    public PlaceResponse searchPlaces(String query) {
+    public PlaceResponse searchPlaces(String query) throws IOException {
 
-        PlaceResponse[] placeResponse = new PlaceResponse[1];
-
-        placeService.searchPlaces(query).enqueue(new Callback<PlaceResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<PlaceResponse> call, @NonNull Response<PlaceResponse> response) {
-                placeResponse[0] = response.body();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<PlaceResponse> call, @NonNull Throwable t) {
-                t.printStackTrace();
-            }
-        });
-
-        return placeResponse[0];
+//        PlaceResponse[] placeResponse = new PlaceResponse[1];
+//
+//        placeService.searchPlaces(query).enqueue(new Callback<PlaceResponse>() {
+//            @Override
+//            public void onResponse(@NonNull Call<PlaceResponse> call, @NonNull Response<PlaceResponse> response) {
+//                placeResponse[0] = response.body();
+//            }
+//
+//            @Override
+//            public void onFailure(@NonNull Call<PlaceResponse> call, @NonNull Throwable t) {
+//                t.printStackTrace();
+//            }
+//        });
+//
+//        return placeResponse[0];
+        return placeService.searchPlaces(query).execute().body();
     }
 
 }
