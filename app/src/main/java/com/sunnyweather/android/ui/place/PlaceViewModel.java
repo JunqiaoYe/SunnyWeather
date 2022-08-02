@@ -23,5 +23,4 @@ public class PlaceViewModel extends ViewModel {
     public void searchPlaces(String query) {
         searchLiveData.setValue(query);
     }
-
 }

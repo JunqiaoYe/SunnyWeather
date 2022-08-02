@@ -14,5 +14,4 @@ public interface PlaceService {
 
     @GET("v2/place?token=" + SunnyWeatherApplication.TOKEN + "&lang=zh_CN")
     Call<PlaceResponse> searchPlaces(@Query("query") String query);
-
 }

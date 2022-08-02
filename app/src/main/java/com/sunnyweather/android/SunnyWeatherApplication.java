@@ -23,5 +23,4 @@ public class SunnyWeatherApplication extends Application {
     public static Context getContext() {
         return context;
     }
-
 }

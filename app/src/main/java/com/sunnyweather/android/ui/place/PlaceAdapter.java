@@ -28,7 +28,9 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        PlaceItemBinding binding = PlaceItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        PlaceItemBinding binding = PlaceItemBinding.inflate(LayoutInflater.from(parent.getContext()),
+                parent,
+                false);
         return new ViewHolder(binding);
     }
 
@@ -57,5 +59,4 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
             placeAddress = binding.placeAddress;
         }
     }
-
 }

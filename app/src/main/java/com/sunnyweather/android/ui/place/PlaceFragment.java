@@ -40,6 +40,7 @@ public class PlaceFragment extends Fragment {
             binding.recyclerView.setLayoutManager(layoutManager);
             adapter = new PlaceAdapter(this, viewModel.placeList);
             binding.recyclerView.setAdapter(adapter);
+
             binding.searchPlaceEdit.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -64,6 +65,7 @@ public class PlaceFragment extends Fragment {
                     }
                 }
             });
+
             viewModel.placeLiveData.observe(requireActivity(), result -> {
                 if (!result.isEmpty()) {
                     binding.recyclerView.setVisibility(View.VISIBLE);
@@ -72,7 +74,9 @@ public class PlaceFragment extends Fragment {
                     viewModel.placeList.addAll(result);
                     adapter.notifyDataSetChanged();
                 } else {
-                    Toast.makeText(PlaceFragment.this.getActivity(), "未能查询到任何地点", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PlaceFragment.this.getActivity(),
+                            "未能查询到任何地点",
+                            Toast.LENGTH_SHORT).show();
                 }
             });
         });
@@ -80,7 +84,9 @@ public class PlaceFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         binding = FragmentPlaceBinding.inflate(getLayoutInflater());
         viewModel = new ViewModelProvider(this).get(PlaceViewModel.class);
         return binding.getRoot();

@@ -1,7 +1,5 @@
 package com.sunnyweather.android.logic;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -9,6 +7,7 @@ import com.sunnyweather.android.logic.model.Place;
 import com.sunnyweather.android.logic.model.PlaceResponse;
 import com.sunnyweather.android.logic.network.SunnyWeatherNetwork;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -28,14 +27,12 @@ public class Repository {
     }
 
     public LiveData<List<Place>> searchPlaces(String query) {
-        Log.i("sss", "searchplaces");
         MutableLiveData<List<Place>> liveData = new MutableLiveData<>();
         new Thread(() -> {
             try {
                 PlaceResponse placeResponse = SunnyWeatherNetwork.getInstance().searchPlaces(query);
-                Log.i("sss", placeResponse == null ? "is null" : "not null");
                 if (placeResponse == null) {
-                    throw new Exception("placeResponse is null!!");
+                    throw new RuntimeException("placeResponse is null");
                 }
                 if (placeResponse.getStatus().equals("ok")) {
                     List<Place> places = placeResponse.getPlaces();
@@ -43,7 +40,7 @@ public class Repository {
                 } else {
                     throw new RuntimeException("response status is " + placeResponse.getStatus());
                 }
-            } catch (Exception e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }).start();
