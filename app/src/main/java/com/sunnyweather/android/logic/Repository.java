@@ -3,8 +3,11 @@ package com.sunnyweather.android.logic;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.sunnyweather.android.logic.model.Place;
-import com.sunnyweather.android.logic.model.PlaceResponse;
+import com.sunnyweather.android.logic.model.place.Place;
+import com.sunnyweather.android.logic.model.place.PlaceResponse;
+import com.sunnyweather.android.logic.model.weather.Weather;
+import com.sunnyweather.android.logic.model.weather.daily.DailyResponse;
+import com.sunnyweather.android.logic.model.weather.realtime.RealtimeResponse;
 import com.sunnyweather.android.logic.network.SunnyWeatherNetwork;
 
 import java.io.IOException;
@@ -39,6 +42,30 @@ public class Repository {
                     liveData.postValue(places);
                 } else {
                     throw new RuntimeException("response status is " + placeResponse.getStatus());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+        return liveData;
+    }
+
+    public LiveData<Weather> refreshWeather(String lng, String lat) {
+        MutableLiveData<Weather> liveData = new MutableLiveData<>();
+        new Thread(() -> {
+            try {
+                RealtimeResponse realtimeResponse = SunnyWeatherNetwork.getInstance().getRealtimeWeather(lng, lat);
+                DailyResponse dailyResponse = SunnyWeatherNetwork.getInstance().getDailyWeather(lng, lat);
+                if (realtimeResponse == null || dailyResponse == null) {
+                    throw new RuntimeException("realtimeResponse or dailyResponse is null");
+                }
+                if (realtimeResponse.getStatus().equals("ok") && dailyResponse.getStatus().equals("ok")) {
+                    Weather weather = new Weather(realtimeResponse.getResult().getRealtime(),
+                            dailyResponse.getResult().getDaily());
+                    liveData.postValue(weather);
+                } else {
+                    throw new RuntimeException("realtime response status is " + realtimeResponse.getStatus() + "\n" +
+                            "daily response status is " + dailyResponse.getStatus());
                 }
             } catch (IOException e) {
                 e.printStackTrace();

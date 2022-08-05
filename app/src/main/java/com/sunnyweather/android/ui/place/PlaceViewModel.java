@@ -6,7 +6,7 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.sunnyweather.android.logic.Repository;
-import com.sunnyweather.android.logic.model.Place;
+import com.sunnyweather.android.logic.model.place.Place;
 
 import java.util.ArrayList;
 import java.util.List;

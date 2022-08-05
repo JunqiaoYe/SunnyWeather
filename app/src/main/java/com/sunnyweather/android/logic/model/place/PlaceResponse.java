@@ -1,4 +1,4 @@
-package com.sunnyweather.android.logic.model;
+package com.sunnyweather.android.logic.model.place;
 
 import androidx.annotation.NonNull;
 
@@ -14,6 +14,14 @@ public class PlaceResponse {
     public PlaceResponse(String status, List<Place> places) {
         this.status = status;
         this.places = places;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public List<Place> getPlaces() {
+        return places;
     }
 
     @Override
@@ -36,13 +44,5 @@ public class PlaceResponse {
                 "status='" + status + '\'' +
                 ", places=" + places +
                 '}';
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public List<Place> getPlaces() {
-        return places;
     }
 }

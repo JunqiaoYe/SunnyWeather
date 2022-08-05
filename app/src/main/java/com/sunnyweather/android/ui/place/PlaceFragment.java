@@ -14,14 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleEventObserver;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.sunnyweather.android.databinding.FragmentPlaceBinding;
-import com.sunnyweather.android.logic.model.Place;
-
-import java.util.List;
 
 public class PlaceFragment extends Fragment {
 
@@ -66,12 +62,12 @@ public class PlaceFragment extends Fragment {
                 }
             });
 
-            viewModel.placeLiveData.observe(requireActivity(), result -> {
-                if (!result.isEmpty()) {
+            viewModel.placeLiveData.observe(requireActivity(), places -> {
+                if (!places.isEmpty()) {
                     binding.recyclerView.setVisibility(View.VISIBLE);
                     binding.bgImageView.setVisibility(View.GONE);
                     viewModel.placeList.clear();
-                    viewModel.placeList.addAll(result);
+                    viewModel.placeList.addAll(places);
                     adapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(PlaceFragment.this.getActivity(),

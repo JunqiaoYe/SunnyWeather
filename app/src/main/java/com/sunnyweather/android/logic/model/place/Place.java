@@ -1,4 +1,4 @@
-package com.sunnyweather.android.logic.model;
+package com.sunnyweather.android.logic.model.place;
 
 import androidx.annotation.NonNull;
 
@@ -19,6 +19,18 @@ public class Place {
         this.name = name;
         this.address = address;
         this.location = location;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public Location getLocation() {
+        return location;
     }
 
     @Override
@@ -43,17 +55,4 @@ public class Place {
                 ", location=" + location +
                 '}';
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
 }
