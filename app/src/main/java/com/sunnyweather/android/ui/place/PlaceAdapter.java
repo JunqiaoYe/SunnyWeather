@@ -45,6 +45,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
             intent.putExtra(SunnyWeatherApplication.INTENT_STRING_EXTRA_PLACE_NAME, place.getName());
             fragment.viewModel.savePlace(place).apply();    // 记录选中的城市
             fragment.startActivity(intent);
+            fragment.firstCreated = false;
             fragment.requireActivity().finish();
         });
         return holder;

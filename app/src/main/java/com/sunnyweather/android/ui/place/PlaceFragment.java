@@ -28,11 +28,17 @@ import com.sunnyweather.android.ui.weather.WeatherActivity;
 
 public class PlaceFragment extends Fragment {
 
+    public boolean firstCreated;
+
     public PlaceViewModel viewModel;
 
     private FragmentPlaceBinding binding;
 
     private PlaceAdapter adapter;
+
+    public PlaceFragment() {
+        firstCreated = true;
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -41,7 +47,7 @@ public class PlaceFragment extends Fragment {
         requireActivity().getLifecycle().addObserver(new LifecycleEventObserver() {
             @Override
             public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
-                if (event.getTargetState() == Lifecycle.State.CREATED) {
+                if (event.getTargetState() == Lifecycle.State.CREATED && firstCreated) {
                     // 判断选中的城市是否已有存储
                     if (viewModel.isPlaceSaved()) {
                         Log.i("PlaceFragment", "place is saved");
