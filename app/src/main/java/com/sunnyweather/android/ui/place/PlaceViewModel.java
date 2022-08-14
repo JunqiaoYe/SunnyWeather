@@ -1,5 +1,7 @@
 package com.sunnyweather.android.ui.place;
 
+import android.content.SharedPreferences;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
@@ -23,4 +25,16 @@ public class PlaceViewModel extends ViewModel {
     public void searchPlaces(String query) {
         searchLiveData.setValue(query);
     }
+
+    // 记录选中的城市
+    public SharedPreferences.Editor savePlace(Place place) {
+        return Repository.getInstance().savePlace(place);
+    }
+    public Place getSavedPlace() {
+        return Repository.getInstance().getSavedPlace();
+    }
+    public boolean isPlaceSaved() {
+        return Repository.getInstance().isPlaceSaved();
+    }
+
 }

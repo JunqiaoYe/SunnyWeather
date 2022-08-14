@@ -3,11 +3,14 @@ package com.sunnyweather.android.ui.weather;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,22 +37,19 @@ public class WeatherActivity extends AppCompatActivity {
 
     private WeatherViewModel viewModel;
 
-    private NowBinding nowBinding;
-
-    private ForecastBinding forecastBinding;
-
-    private LifeIndexBinding lifeIndexBinding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // 背景图和状态栏融合
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
+
         activityWeatherBinding = ActivityWeatherBinding.inflate(getLayoutInflater());
         setContentView(activityWeatherBinding.getRoot());
         viewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
         Log.i("WeatherActivity", "viewModel is " + viewModel);
-        nowBinding = NowBinding.inflate(getLayoutInflater());
-        forecastBinding = ForecastBinding.inflate(getLayoutInflater());
-        lifeIndexBinding = LifeIndexBinding.inflate(getLayoutInflater());
 
         if (viewModel.locationLng.isEmpty()) {
             viewModel.locationLng = getIntent().getStringExtra(SunnyWeatherApplication.INTENT_STRING_EXTRA_LNG);
@@ -77,11 +77,16 @@ public class WeatherActivity extends AppCompatActivity {
         // 填充 now.xml 布局中的数据
         String currentTempText = realtime.getTemperature().intValue() + " ℃";
         String currentPM25Text = "空气指数 " + realtime.getAirQuality().getAqi().getChn().intValue();
-        nowBinding.placeName.setText(viewModel.placeName);
-        nowBinding.currentTemp.setText(currentTempText);
-        nowBinding.currentSky.setText(Sky.getSky(realtime.getSkycon()).getInfo());
-        nowBinding.currentAQI.setText(currentPM25Text);
-        nowBinding.nowLayout.setBackgroundResource(Sky.getSky(realtime.getSkycon()).getBg());
+        TextView placeName = findViewById(R.id.placeName);
+        TextView currentTemp = findViewById(R.id.currentTemp);
+        TextView currentSky = findViewById(R.id.currentSky);
+        TextView currentAQI = findViewById(R.id.currentAQI);
+        RelativeLayout nowLayout = findViewById(R.id.nowLayout);
+        placeName.setText(viewModel.placeName);
+        currentTemp.setText(currentTempText);
+        currentSky.setText(Sky.getSky(realtime.getSkycon()).getInfo());
+        currentAQI.setText(currentPM25Text);
+        nowLayout.setBackgroundResource(Sky.getSky(realtime.getSkycon()).getBg());
         Log.i("WeatherActivity", "placeName is " + viewModel.placeName);
         Log.i("WeatherActivity", "currentTemp is " + currentTempText);
         Log.i("WeatherActivity", "currentSky is " + Sky.getSky(realtime.getSkycon()).getInfo());
@@ -89,13 +94,14 @@ public class WeatherActivity extends AppCompatActivity {
         Log.i("WeatherActivity", "nowLayout background is " + Sky.getSky(realtime.getSkycon()).getBg());
 
         // 填充 forecast.xml 布局中的数据
-        forecastBinding.forecastLayout.removeAllViews();
+        LinearLayout forecastLayout = findViewById(R.id.forecastLayout);
+        forecastLayout.removeAllViews();
         int days = daily.getSkycon().size();
         for (int i = 0; i < days; i++) {
             Skycon skycon = daily.getSkycon().get(i);
             Temperature temperature = daily.getTemperature().get(i);
             View view = LayoutInflater.from(this).inflate(R.layout.forecast_item,
-                    forecastBinding.forecastLayout,
+                    forecastLayout,
                     false);
             TextView dateInfo = view.findViewById(R.id.dateInfo);
             ImageView skyIcon = view.findViewById(R.id.skyIcon);
@@ -113,15 +119,19 @@ public class WeatherActivity extends AppCompatActivity {
             Log.i("WeatherActivity", "skyIcon is " + sky.getIcon());
             Log.i("WeatherActivity", "skyInfo is " + sky.getInfo());
             Log.i("WeatherActivity", "temperatureInfo is " + tempText);
-            forecastBinding.forecastLayout.addView(view);
+            forecastLayout.addView(view);
         }
 
         // 填充 life_index.xml 布局中的数据
         LifeIndex lifeIndex = daily.getLifeIndex();
-        lifeIndexBinding.ultravioletText.setText(lifeIndex.getUltraviolet().get(0).getDesc());
-        lifeIndexBinding.carWashingText.setText(lifeIndex.getCarWashing().get(0).getDesc());
-        lifeIndexBinding.dressingText.setText(lifeIndex.getDressing().get(0).getDesc());
-        lifeIndexBinding.coldRiskText.setText(lifeIndex.getColdRisk().get(0).getDesc());
+        TextView ultravioletText = findViewById(R.id.ultravioletText);
+        TextView carWashingText = findViewById(R.id.carWashingText);
+        TextView dressingText = findViewById(R.id.dressingText);
+        TextView coldRiskText = findViewById(R.id.coldRiskText);
+        ultravioletText.setText(lifeIndex.getUltraviolet().get(0).getDesc());
+        carWashingText.setText(lifeIndex.getCarWashing().get(0).getDesc());
+        dressingText.setText(lifeIndex.getDressing().get(0).getDesc());
+        coldRiskText.setText(lifeIndex.getColdRisk().get(0).getDesc());
         Log.i("WeatherActivity", "ultravioletText is " + lifeIndex.getUltraviolet().get(0).getDesc());
         Log.i("WeatherActivity", "carWashingText is " + lifeIndex.getCarWashing().get(0).getDesc());
         Log.i("WeatherActivity", "dressingText is " + lifeIndex.getDressing().get(0).getDesc());

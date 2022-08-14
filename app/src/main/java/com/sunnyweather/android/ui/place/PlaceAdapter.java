@@ -1,6 +1,7 @@
 package com.sunnyweather.android.ui.place;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -18,11 +19,11 @@ import java.util.List;
 
 public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> {
 
-    private final Fragment fragment;
+    private final PlaceFragment fragment;
 
     private final List<Place> placeList;
 
-    public PlaceAdapter(Fragment fragment, List<Place> placeList) {
+    public PlaceAdapter(PlaceFragment fragment, List<Place> placeList) {
         this.fragment = fragment;
         this.placeList = placeList;
     }
@@ -35,14 +36,16 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
                 false);
         ViewHolder holder = new ViewHolder(binding);
         holder.itemView.setOnClickListener(view -> {
+            Log.i("PlaceAdapter", "click itemView");
             int position = holder.getBindingAdapterPosition();
             Place place = placeList.get(position);
             Intent intent = new Intent(parent.getContext(), WeatherActivity.class);
             intent.putExtra(SunnyWeatherApplication.INTENT_STRING_EXTRA_LNG, place.getLocation().getLng());
             intent.putExtra(SunnyWeatherApplication.INTENT_STRING_EXTRA_LAT, place.getLocation().getLat());
             intent.putExtra(SunnyWeatherApplication.INTENT_STRING_EXTRA_PLACE_NAME, place.getName());
+            fragment.viewModel.savePlace(place).apply();    // 记录选中的城市
             fragment.startActivity(intent);
-//            fragment.requireActivity().finish();
+            fragment.requireActivity().finish();
         });
         return holder;
     }

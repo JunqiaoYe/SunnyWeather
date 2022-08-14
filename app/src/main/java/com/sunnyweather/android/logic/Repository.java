@@ -1,8 +1,11 @@
 package com.sunnyweather.android.logic;
 
+import android.content.SharedPreferences;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.sunnyweather.android.logic.dao.PlaceDao;
 import com.sunnyweather.android.logic.model.place.Place;
 import com.sunnyweather.android.logic.model.place.PlaceResponse;
 import com.sunnyweather.android.logic.model.weather.Weather;
@@ -73,4 +76,16 @@ public class Repository {
         }).start();
         return liveData;
     }
+
+    // 记录选中的城市
+    public SharedPreferences.Editor savePlace(Place place) {
+        return PlaceDao.getInstance().savePlace(place);
+    }
+    public Place getSavedPlace() {
+        return PlaceDao.getInstance().getSavedPlace();
+    }
+    public boolean isPlaceSaved() {
+        return PlaceDao.getInstance().isPlaceSaved();
+    }
+
 }
